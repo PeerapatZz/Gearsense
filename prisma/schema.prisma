@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Product catalog
+model Product {
+  id               String   @id @default(cuid())
+  name             String
+  brand            String
+  category         String   // "smartphone", "laptop", "gaming"
+  price            Float
+  specs            String   // JSON string of specifications
+  battery          Int      // Battery life in hours (0 for desktops)
+  performanceLevel Int      // 1-10 scale
+  weight           Float    // Weight in kg
+  imageUrl         String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  recommendations Recommendation[]
+}
+
+// User recommendation requests
+model Request {
+  id          String   @id @default(cuid())
+  productType String   // "smartphone", "laptop", "gaming"
+  budget      Float
+  usage       String   // "gaming", "work", "general"
+  preferences String?  // JSON string of optional preferences
+  createdAt   DateTime @default(now())
+
+  recommendations Recommendation[]
+}
+
+// AI-generated recommendations
+model Recommendation {
+  id          String   @id @default(cuid())
+  requestId   String
+  request     Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+  productName String
+  price       Float
+  specs       String   // JSON string
+  reason      String   // AI explanation
+  pros        String   // JSON array
+  cons        String   // JSON array
+  badge       String?  // "best_performance", "best_budget", "balanced"
+  score       Float    // Computed score
+  createdAt   DateTime @default(now())
+
+  feedback Feedback[]
+}
+
+// User feedback on recommendations
+model Feedback {
+  id               String        @id @default(cuid())
+  recommendationId String
+  recommendation   Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  feedbackType     String        // "selected", "not_suitable"
+  createdAt        DateTime      @default(now())
+}
+
+// Analytics tracking
+model Analytics {
+  id        String   @id @default(cuid())
+  eventType String
+  eventData String?  // JSON string
+  createdAt DateTime @default(now())
+}
