@@ -276,3 +276,21 @@ MIT License - Feel free to use for learning and development.
 ---
 
 Built with ❤️ using Next.js, Tailwind CSS, and OpenAI
+
+## Run Instructions (Short)
+
+1. Clone the repository  
+2. Install dependencies with `bun install` or `npm install`  
+3. Set up environment variables in `.env.local`  
+4. Initialize the database with `bun run db:push`  
+5. Seed product data with `bun run prisma/seed.ts`  
+6. Start the development server with `bun run dev`  
+7. Open http://localhost:3000 in your browser  
+
+## Team Contribution Log
+
+- **Peerapat Thinsorn** – Project setup, backend API development, database architecture  
+- **Montri Pimpa** – Frontend UI development, component design, page layout  
+- **Arthit Thongpaibun** – System testing and analytics dashboard implementation  
+- **Yossawat Siriwattananon** – Feedback system implementation and data testing  
+- **Pongpawee Pongngam** – UI improvements, frontend components, and README documentation  
