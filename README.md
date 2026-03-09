@@ -122,8 +122,8 @@ MIT License - Feel free to use for learning and development.
 
 ## Team Contribution Log
 
-- **Peerapat Thinsorn** – Project setup, backend API development, database architecture  
-- **Montree Pimpa** – Frontend UI development, component design, page layout  
-- **Arthit Thongpaibun** – System testing and analytics dashboard implementation  
-- **Yossawat Siriwattananon** – Feedback system implementation and data testing  
-- **Pongpawee Pongngam** – UI improvements, frontend components, and README documentation  
+- **Peerapat Thinsorn** – Project lead, backend API development, database schema design, AI recommendation integration  
+- **Montri Pimpa** – Frontend UI/UX development, page layout, recommendation result interface  
+- **Arthit Thongpaibun** – Analytics dashboard implementation, KPI tracking, system testing  
+- **Yossawat Siriwattananon** – Feedback system, history management, data validation and testing  
+- **Pongpawee Pongngam** – Frontend components, UI improvements, documentation and README preparation  
