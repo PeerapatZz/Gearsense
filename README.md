@@ -290,7 +290,7 @@ Built with ❤️ using Next.js, Tailwind CSS, and OpenAI
 ## Team Contribution Log
 
 - **Peerapat Thinsorn** – Project setup, backend API development, database architecture  
-- **Montri Pimpa** – Frontend UI development, component design, page layout  
+- **Montree Pimpa** – Frontend UI development, component design, page layout  
 - **Arthit Thongpaibun** – System testing and analytics dashboard implementation  
 - **Yossawat Siriwattananon** – Feedback system implementation and data testing  
 - **Pongpawee Pongngam** – UI improvements, frontend components, and README documentation  
