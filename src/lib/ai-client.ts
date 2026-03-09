@@ -77,7 +77,9 @@ export async function askAboutProducts(
     });
 
     if (!response.ok) {
-      throw new Error('Chat request failed');
+      const err = await response.json().catch(() => ({}));
+      const details = err.details ? ` - ${err.details}` : '';
+      throw new Error(`Chat request failed: ${err.error || response.statusText}${details}`);
     }
 
     const data = await response.json();
@@ -105,7 +107,9 @@ export async function askAboutProduct(
     });
 
     if (!response.ok) {
-      throw new Error('Chat request failed');
+      const err = await response.json().catch(() => ({}));
+      const details = err.details ? ` - ${err.details}` : '';
+      throw new Error(`Chat request failed: ${err.error || response.statusText}${details}`);
     }
 
     const data = await response.json();

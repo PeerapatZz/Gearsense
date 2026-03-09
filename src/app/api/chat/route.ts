@@ -1,12 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import Groq from "groq-sdk";
 
-const genAI = new GoogleGenerativeAI(
-  process.env.GOOGLE_AI_API_KEY!
-)
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash"
-})
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY
+});
 
 export async function POST(req: Request) {
 
@@ -34,10 +30,18 @@ ${context}
 Help the user compare these products and explain the differences.
 `
 
-    const result = await model.generateContent(prompt)
+    const completion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "llama-3.1-8b-instant",
+    });
 
     return Response.json({
-      answer: result.response.text()
+      answer: completion.choices[0]?.message?.content || "No response generated."
     })
 
   } catch (error) {
@@ -45,7 +49,7 @@ Help the user compare these products and explain the differences.
     console.error("Chat error:", error)
 
     return Response.json(
-      { error: "AI chat failed" },
+      { error: "AI chat failed", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
 

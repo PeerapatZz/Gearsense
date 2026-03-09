@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 import { calculateScore } from '@/lib/scoring';
 
 const DISCLAIMER = "AI recommendations are based on general product information. Please verify specifications and price before purchase.";
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+// Initialize Groq AI
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -99,8 +100,11 @@ Generate strictly this JSON format, nothing else, no markdown formatting:
   "cons": ["con 1", "con 2"]
 }`;
 
-        const result = await model.generateContent(prompt);
-        const text = result.response.text();
+        const completion = await groq.chat.completions.create({
+          messages: [{ role: 'user', content: prompt }],
+          model: 'llama-3.1-8b-instant',
+        });
+        const text = completion.choices[0]?.message?.content || "{}";
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         const aiData = jsonMatch ? JSON.parse(jsonMatch[0]) : {
           reason: `Recommended for your ${usage} needs.`,
