@@ -1,265 +1,103 @@
-# VibeShop Advisor 🛒✨
+# GearSense AI 🛒✨
 
-AI-powered tech product recommendation system that helps users find the perfect smartphone, laptop, or gaming gear based on their budget and usage needs. Features a ChatGPT-style AI assistant for follow-up questions.
+AI-powered tech product recommendation system that helps users find the perfect smartphone, laptop, or gaming gear based on their budget and usage needs. Features a chat-style AI assistant for follow-up questions powered by Google Gemini and Groq.
 
-![VibeShop Advisor](https://img.shields.io/badge/VibeShop-Advisor-8b5cf6?style=for-the-badge)
-![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8?style=flat-square&logo=tailwindcss)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 
 ## ✨ Features
 
 ### 🤖 AI-Powered Recommendations
-- **Smart Product Scoring** - Products scored based on budget fit (30%), usage match (30%), performance (20%), battery (10%), and weight (10%)
-- **GPT-4 Integration** - AI-generated explanations with pros/cons for each product
+- **Smart Product Scoring** - Products scored based on budget fit, usage match, performance, battery, and weight
+- **Gemini / Groq Integration** - AI-generated explanations with pros/cons for each product
 - **Budget Guardrails** - Products exceeding budget by more than 15% are excluded
 
 ### 💬 AI Chat Assistant
-- **ChatGPT-Style Interface** - Floating chat panel for asking questions about recommendations
+- **Floating Chat Panel** - Ask follow-up questions about recommendations seamlessly
 - **Context-Aware Responses** - AI answers based on your specific recommendations
 - **Suggested Questions** - Quick-access buttons for common queries
-- **Product-Specific Chat** - Ask detailed questions about individual products
 
 ### 🎨 Modern UI/UX
 - **Glassmorphism Design** - Floating pill navbar with backdrop blur
 - **Animated Backgrounds** - Gradient animations and floating icons
-- **Step-by-Step Form** - 4-step wizard with progress indicator
-- **Smooth Animations** - Framer Motion powered transitions
+- **Step-by-Step Form** - Wizard style form to get your product requirements
 
-### 📊 Analytics Dashboard
-- Recommendation requests over time
-- Product category popularity
-- Usage type distribution
-- Budget range analysis
+## � Quick Start / How to Run
 
-### 🛠 Admin Features
-- **Human-in-the-Loop** - Admin mode for editing AI recommendations
-- **Feedback Tracking** - Record user selections and rejections
-- **History Management** - View past recommendations with filters
+Follow these instructions to run the project locally.
 
-## 🚀 Quick Start
+### 1. Prerequisites
+- **Node.js**: `v18` or higher
+- **npm**, **yarn**, **pnpm**, or **bun** installed
+
+### 2. Clone and Install Dependencies
 
 ```bash
-# Install dependencies
+# Using bun (recommended)
 bun install
 
-# Set up the database
-bun run db:push
-
-# Seed product data
-bun run prisma/seed.ts
-
-# Start development server
-bun run dev
+# Or using npm
+npm install
 ```
+
+### 3. Environment Variables
+
+Create a `.env.local` file in the root of the project by copying the example, or add the following keys:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# AI Providers
+GOOGLE_AI_API_KEY=your_google_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+
+# Optional
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 4. Database Setup (Prisma)
+
+Push the database schema and generate the client.
+
+```bash
+# Push database changes
+bun run db:push
+# OR
+npm run db:push
+
+# Generate Prisma Client
+bun run db:generate
+# OR
+npm run db:generate
+```
+
+### 5. Start the Development Server
+
+```bash
+bun run dev
+# OR
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## 📁 Project Structure
 
 ```
-vibeshop-advisor/
+gearsense/
 ├── prisma/
-│   ├── schema.prisma      # Database schema
-│   ├── seed.ts            # Product seeding script
-│   └── seeds/
-│       └── products.ts    # 36 product dataset
+│   └── schema.prisma      # Database schema
 ├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── submit/    # Recommendation API
-│   │   │   ├── history/   # History API
-│   │   │   ├── feedback/  # Feedback API
-│   │   │   └── products/  # Products API
-│   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.tsx       # Main application
-│   ├── components/
-│   │   ├── ui/            # ShadCN UI components
-│   │   └── vibeshop/
-│   │       ├── GlassNavbar.tsx
-│   │       ├── HomePage.tsx
-│   │       ├── RecommendationForm.tsx
-│   │       ├── LoadingExperience.tsx
-│   │       ├── ResultsPage.tsx
-│   │       ├── ProductCard.tsx
-│   │       ├── ChatPanel.tsx
-│   │       ├── FeatureCard.tsx
-│   │       ├── HistoryPage.tsx
-│   │       └── DashboardPage.tsx
-│   └── lib/
-│       ├── ai.ts          # OpenAI integration
-│       ├── scoring.ts     # Product scoring system
-│       ├── store.ts       # Zustand state management
-│       ├── db.ts          # Prisma client
-│       └── utils.ts       # Utility functions
-├── .env.local.example     # Environment template
+│   ├── app/               # Next.js App Router (pages and API routes)
+│   ├── components/        # React components (UI and custom)
+│   └── lib/               # Utility functions, DB setup, AI clients
+├── .env.local             # Environment credentials
+├── package.json
 └── README.md
-```
-
-## 🗄️ Database Schema
-
-### Product
-| Field | Type | Description |
-|-------|------|-------------|
-| id | String | Unique identifier |
-| name | String | Product name |
-| brand | String | Brand name |
-| category | String | smartphone, laptop, gaming |
-| price | Float | Product price |
-| specs | JSON | Specifications |
-| battery | Int | Battery life (hours) |
-| performanceLevel | Int | 1-10 scale |
-| weight | Float | Weight in kg |
-
-### Request
-| Field | Type | Description |
-|-------|------|-------------|
-| id | String | Unique identifier |
-| productType | String | Requested category |
-| budget | Float | User's budget |
-| usage | String | gaming, work, general |
-| preferences | JSON | Optional preferences |
-
-### Recommendation
-| Field | Type | Description |
-|-------|------|-------------|
-| id | String | Unique identifier |
-| requestId | String | Link to request |
-| productName | String | Recommended product |
-| price | Float | Product price |
-| specs | JSON | Specifications |
-| reason | String | AI explanation |
-| pros | JSON | Array of advantages |
-| cons | JSON | Array of disadvantages |
-| badge | String | best_performance, best_budget, balanced_choice |
-| score | Float | Computed match score |
-
-## 🔌 API Endpoints
-
-### POST /api/submit
-Submit a recommendation request.
-
-**Request:**
-```json
-{
-  "productType": "smartphone",
-  "budget": 800,
-  "usage": "work",
-  "preferences": {
-    "batteryImportant": true,
-    "lightweight": true,
-    "highPerformance": false,
-    "preferredBrand": "Apple"
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "requestId": "abc123",
-  "recommendations": [
-    {
-      "id": "rec1",
-      "productName": "iPhone 15",
-      "brand": "Apple",
-      "price": 799,
-      "reason": "Perfect for work with excellent productivity apps...",
-      "pros": ["Great battery", "Premium build", "iOS ecosystem"],
-      "cons": ["No expandable storage", "Lightning port only"],
-      "badge": "balanced_choice",
-      "score": 85.5
-    }
-  ],
-  "disclaimer": "AI recommendations are based on..."
-}
-```
-
-### GET /api/history
-Get recommendation history.
-
-**Query Parameters:**
-- `limit` - Results per page (default: 20)
-- `offset` - Pagination offset
-- `productType` - Filter by category
-- `usage` - Filter by usage type
-
-### POST /api/feedback
-Submit user feedback.
-
-**Request:**
-```json
-{
-  "recommendationId": "rec1",
-  "feedbackType": "selected"
-}
-```
-
-## 🎯 Product Scoring
-
-### Weights
-| Factor | Weight | Description |
-|--------|--------|-------------|
-| Budget Fit | 30% | How well price matches budget |
-| Usage Match | 30% | Suitability for stated usage |
-| Performance | 20% | Performance level rating |
-| Battery | 10% | Battery life score |
-| Weight | 10% | Portability score |
-
-### Usage Profiles
-| Usage | Performance Priority | Battery Priority | Weight Priority |
-|-------|---------------------|------------------|-----------------|
-| Gaming | 100% | 30% | 20% |
-| Work/Study | 60% | 80% | 70% |
-| General | 50% | 60% | 50% |
-
-### Badges
-- **Best Performance** 🚀 - Highest performance among recommendations
-- **Best Budget** 💰 - Best value for money
-- **Balanced Choice** ⚖️ - Well-rounded option
-
-## 📱 Product Dataset
-
-36 products across 3 categories:
-
-### Smartphones (12)
-iPhone 15 Pro Max, iPhone 15, Samsung Galaxy S24 Ultra, S24, A54, Google Pixel 8 Pro, 7a, OnePlus 12, Nord N30, Xiaomi 14 Ultra, Redmi Note 13 Pro, Sony Xperia 1 V
-
-### Laptops (12)
-MacBook Pro 16" M3 Max, MacBook Air 15" M3, MacBook Air 13" M2, Dell XPS 15, XPS 13 Plus, ASUS ROG Zephyrus G16, ZenBook 14, Lenovo ThinkPad X1 Carbon, Legion Pro 7i, HP Spectre x360, Razer Blade 15, Microsoft Surface Laptop 5
-
-### Gaming Gear (12)
-PlayStation 5, Xbox Series X, Nintendo Switch OLED, Steam Deck OLED, ASUS ROG Ally, Logitech G Pro X Superlight 2, G915 TKL, Razer DeathAdder V3 Pro, BlackWidow V4 Pro, SteelSeries Arctis Nova Pro, Xbox Elite Controller, PlayStation DualSense Edge
-
-## 🤖 AI Features
-
-### Product Recommendation AI
-Generates personalized explanations for each product:
-- Why it fits your needs
-- Specific advantages (3 pros)
-- Honest limitations (2 cons)
-
-### Chat Assistant
-Answer questions like:
-- "Which one is best for gaming?"
-- "Compare options 1 and 2"
-- "Which has the best battery?"
-- "Is this good for video editing?"
-
-### Suggested Questions
-Quick-access buttons for common queries that auto-submit to AI.
-
-## 🔧 Environment Variables
-
-```env
-# Required - OpenAI API Key (handled by z-ai-web-dev-sdk)
-# The SDK handles API keys internally
-
-# Database
-DATABASE_URL="file:./db/custom.db"
-
-# Optional
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_APP_NAME=VibeShop Advisor
 ```
 
 ## ⚠️ Important Notices
@@ -267,15 +105,10 @@ NEXT_PUBLIC_APP_NAME=VibeShop Advisor
 - AI recommendations are based on general product information
 - Always verify specifications and prices before purchase
 - Products exceeding budget by more than 15% are automatically excluded
-- Demo flow completes in under 3 minutes
 
 ## 📝 License
 
 MIT License - Feel free to use for learning and development.
-
----
-
-Built with ❤️ using Next.js, Tailwind CSS, and OpenAI
 
 ## Run Instructions (Short)
 
