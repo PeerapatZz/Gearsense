@@ -16,10 +16,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
 import { askAboutProducts, askAboutProduct, type ProductContext, type ChatMessage } from '@/lib/ai-client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useLanguage } from '@/context/LanguageContext';
+import { cn } from '@/lib/utils';
 
 interface ChatPanelProps {
   products: ProductContext[];
@@ -37,6 +38,7 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export function ChatPanel({ products, selectedProduct, onClose, isOpen = true }: ChatPanelProps) {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -44,16 +46,28 @@ export function ChatPanel({ products, selectedProduct, onClose, isOpen = true }:
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Welcome message when chat opens
-  useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      const welcomeMessage = selectedProduct
-        ? `Hi! I'm here to help you learn more about the ${selectedProduct.name}. Ask me anything about its features, performance, or whether it's right for you!`
-        : `Hi! I'm your GearSense AI advisor. I can help you compare the ${products.length} recommended products, answer questions about specifications, or help you decide which one is best for your needs.`;
+  // Keep track of the last selected product ID to reset state
+  const lastSelectedId = useRef<string | undefined>(selectedProduct?.name);
 
-      setMessages([{ role: 'assistant', content: welcomeMessage }]);
+  // Welcome message and product context reset
+  useEffect(() => {
+    if (isOpen) {
+      if (selectedProduct && selectedProduct.name !== lastSelectedId.current) {
+        // Reset context
+        lastSelectedId.current = selectedProduct.name;
+        setMessages([{ role: 'assistant', content: `Hi! I'm here to help you learn more about the ${selectedProduct.name}. Ask me anything about its features, performance, or whether it's right for you!` }]);
+        setInput(t('chat.defaultMsg'));
+        return;
+      }
+
+      if (messages.length === 0) {
+        const welcomeMessage = selectedProduct
+          ? `Hi! I'm here to help you learn more about the ${selectedProduct.name}. Ask me anything about its features, performance, or whether it's right for you!`
+          : `Hi! I'm your GearSense AI advisor. I can help you compare the ${products.length} recommended products, answer questions about specifications, or help you decide which one is best for your needs.`;
+        setMessages([{ role: 'assistant', content: welcomeMessage }]);
+      }
     }
-  }, [isOpen, selectedProduct, products.length, messages.length]);
+  }, [isOpen, selectedProduct, products.length, messages.length, t]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -147,7 +161,7 @@ export function ChatPanel({ products, selectedProduct, onClose, isOpen = true }:
             </motion.div>
             <div className={cn('text-white', isMinimized && 'hidden sm:block')}>
               <p className="font-semibold text-sm">GearSense AI</p>
-              <p className="text-xs text-white/70">Ask me anything</p>
+              <p className="text-xs text-white/70">{t('chat.askAnything')}</p>
             </div>
           </div>
 
@@ -179,6 +193,16 @@ export function ChatPanel({ products, selectedProduct, onClose, isOpen = true }:
         {/* Chat content (hidden when minimized) */}
         {!isMinimized && (
           <>
+            {/* Product Header Indicator */}
+            {selectedProduct && (
+              <div className="bg-emerald-50 dark:bg-emerald-950/30 border-b border-emerald-100 dark:border-emerald-900/50 px-4 py-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                  {t('chat.discussing')} <span className="font-bold">{selectedProduct.name}</span>
+                </span>
+              </div>
+            )}
+
             {/* Messages */}
             <ScrollArea ref={scrollRef} className="flex-1 p-4 overflow-y-auto">
               <div className="space-y-4">
@@ -286,7 +310,7 @@ export function ChatPanel({ products, selectedProduct, onClose, isOpen = true }:
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about products..."
+                  placeholder={t('chat.placeholder')}
                   className="flex-1 rounded-xl border-zinc-200 dark:border-zinc-700 focus:ring-violet-500"
                   disabled={isLoading}
                 />

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface HistoryItem {
   id: string;
@@ -56,6 +57,8 @@ export function HistoryPage() {
     return true;
   });
 
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4">
       <div className="max-w-5xl mx-auto">
@@ -70,11 +73,11 @@ export function HistoryPage() {
               <HistoryIcon className="w-5 h-5 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-              Recommendation History
+              {t('hist.title')}
             </h1>
           </div>
           <p className="text-zinc-600 dark:text-zinc-400">
-            View your past recommendation requests and results
+            {t('hist.subtitle')}
           </p>
         </motion.div>
 
@@ -93,15 +96,15 @@ export function HistoryPage() {
         >
           <div className="flex items-center gap-2 text-zinc-500">
             <Filter className="w-4 h-4" />
-            <span className="text-sm font-medium">Filters:</span>
+            <span className="text-sm font-medium">{t('hist.filters')}</span>
           </div>
-          
+
           <Select value={typeFilter} onValueChange={setTypeFilter}>
             <SelectTrigger className="w-40 rounded-xl">
               <SelectValue placeholder="Product Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="all">{t('hist.allTypes')}</SelectItem>
               <SelectItem value="smartphone">Smartphone</SelectItem>
               <SelectItem value="laptop">Laptop</SelectItem>
               <SelectItem value="gaming">Gaming Gear</SelectItem>
@@ -113,7 +116,7 @@ export function HistoryPage() {
               <SelectValue placeholder="Usage" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Usage</SelectItem>
+              <SelectItem value="all">{t('hist.allUsage')}</SelectItem>
               <SelectItem value="gaming">Gaming</SelectItem>
               <SelectItem value="work">Work</SelectItem>
               <SelectItem value="general">General</SelectItem>
@@ -129,7 +132,7 @@ export function HistoryPage() {
             }}
             className="text-zinc-500"
           >
-            Clear
+            {t('hist.clear')}
           </Button>
         </motion.div>
 
@@ -147,7 +150,7 @@ export function HistoryPage() {
               )}
             >
               <HistoryIcon className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mx-auto mb-4" />
-              <p className="text-zinc-500 dark:text-zinc-400">No history found</p>
+              <p className="text-zinc-500 dark:text-zinc-400">{t('hist.noHistory')}</p>
             </motion.div>
           ) : (
             filteredHistory.map((item, index) => (
@@ -182,11 +185,11 @@ export function HistoryPage() {
                         </Badge>
                       </div>
                       <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                        Top pick: <span className="font-medium text-violet-600 dark:text-violet-400">{item.topRecommendation}</span>
+                        {t('hist.topPick')} <span className="font-medium text-violet-600 dark:text-violet-400">{item.topRecommendation}</span>
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-6 text-sm">
                     <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
                       <DollarSign className="w-4 h-4" />

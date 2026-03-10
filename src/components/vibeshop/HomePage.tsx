@@ -5,25 +5,27 @@ import { Sparkles, Brain, Wallet, GitCompare, ArrowRight, Cpu, Shield, Zap } fro
 import { Button } from '@/components/ui/button';
 import { FeatureCard } from './FeatureCard';
 import { useAppStore } from '@/lib/store';
+import { useLanguage } from '@/context/LanguageContext';
 
 export function HomePage() {
   const { setCurrentPage } = useAppStore();
+  const { t } = useLanguage();
 
   const features = [
     {
       icon: Brain,
-      title: 'Smart AI Analysis',
-      description: 'Our AI analyzes specifications, performance, and user reviews to find the perfect match for your needs.',
+      title: t('home.feat1.title'),
+      description: t('home.feat1.desc'),
     },
     {
       icon: Wallet,
-      title: 'Budget Optimized',
-      description: 'Get the best value within your budget. We consider price-performance ratio for every recommendation.',
+      title: t('home.feat2.title'),
+      description: t('home.feat2.desc'),
     },
     {
       icon: GitCompare,
-      title: 'Side-by-Side Comparison',
-      description: 'See detailed comparisons with AI-generated pros, cons, and personalized explanations.',
+      title: t('home.feat3.title'),
+      description: t('home.feat3.desc'),
     },
   ];
 
@@ -45,22 +47,21 @@ export function HomePage() {
           >
             <Sparkles className="w-4 h-4 text-violet-600 dark:text-violet-400" />
             <span className="text-sm font-medium text-violet-700 dark:text-violet-300">
-              AI-Powered Product Advisor
+              {t('home.advisorBadge')}
             </span>
           </motion.div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-zinc-900 dark:text-zinc-100">Find Your Perfect </span>
-            <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              Tech Product
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight whitespace-pre-wrap">
+            <span className="text-zinc-900 dark:text-zinc-100">{t('landing.title')}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 dark:from-violet-400 dark:via-fuchsia-400 dark:to-pink-400">
+              {t('landing.titleHighlight')}
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto mb-10">
-            GearSense AI analyzes thousands of products to recommend the best smartphones,
-            laptops, and gaming gear tailored to your budget and usage needs.
+          <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto mb-10 whitespace-pre-wrap">
+            {t('landing.subtitle')}
           </p>
 
           {/* CTA */}
@@ -75,7 +76,7 @@ export function HomePage() {
                 className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-full px-8 py-6 text-lg shadow-xl shadow-violet-500/25 group"
               >
                 <Cpu className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                Get AI Recommendations
+                {t('landing.cta')}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
@@ -85,7 +86,7 @@ export function HomePage() {
               size="lg"
               className="rounded-full px-8 py-6 text-lg border-2"
             >
-              View Dashboard
+              {t('home.viewDash')}
             </Button>
           </div>
         </motion.div>
@@ -101,10 +102,10 @@ export function HomePage() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
-            How GearSense AI Works
+            {t('home.howItWorks')}
           </h2>
           <p className="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-            Our intelligent system makes finding the right product simple and stress-free
+            {t('home.howItWorksDesc')}
           </p>
         </motion.div>
 
@@ -140,10 +141,10 @@ export function HomePage() {
 
           <div className="grid md:grid-cols-4 gap-8 relative z-10">
             {[
-              { value: '100+', label: 'Products Analyzed', icon: Brain },
-              { value: '<3s', label: 'Avg. Response Time', icon: Zap },
-              { value: '95%', label: 'User Satisfaction', icon: Shield },
-              { value: '3', label: 'Top Recommendations', icon: Sparkles },
+              { value: '100+', label: t('home.stat1'), icon: Brain },
+              { value: '<3s', label: t('home.stat2'), icon: Zap },
+              { value: '95%', label: t('home.stat3'), icon: Shield },
+              { value: '3', label: t('home.stat4'), icon: Sparkles },
             ].map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -167,7 +168,6 @@ export function HomePage() {
         </motion.div>
       </section>
 
-      {/* Disclaimer */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -175,8 +175,7 @@ export function HomePage() {
         className="max-w-2xl mx-auto text-center"
       >
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          AI recommendations are based on product specifications and general information.
-          Please verify specifications and prices before purchase.
+          {t('home.disclaimer')}
         </p>
       </motion.div>
     </div>

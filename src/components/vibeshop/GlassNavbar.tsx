@@ -1,22 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Cpu } from 'lucide-react';
+import { Menu, X, Cpu, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppStore, Page } from '@/lib/store';
+import { useLanguage } from '@/context/LanguageContext';
+import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
-
-const navItems: { label: string; page: Page }[] = [
-  { label: 'Home', page: 'home' },
-  { label: 'Recommend', page: 'recommend' },
-  { label: 'History', page: 'history' },
-  { label: 'Dashboard', page: 'dashboard' },
-];
 
 export function GlassNavbar() {
   const { currentPage, setCurrentPage } = useAppStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const navItems: { label: string; page: Page }[] = [
+    { label: t('nav.home'), page: 'home' },
+    { label: t('nav.recommend'), page: 'recommend' },
+    { label: t('nav.history'), page: 'history' },
+    { label: t('nav.dashboard'), page: 'dashboard' },
+  ];
 
   return (
     <>
@@ -82,13 +92,29 @@ export function GlassNavbar() {
               ))}
             </div>
 
-            {/* CTA Button */}
-            <div className="hidden md:block">
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-2">
+              {mounted && (
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4 text-zinc-400" /> : <Moon className="w-4 h-4 text-zinc-600" />}
+                </button>
+              )}
+
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'th' : 'en')}
+                className="px-3 py-1 text-xs font-semibold rounded-full border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                {language === 'en' ? 'TH' : 'EN'}
+              </button>
+
               <Button
                 onClick={() => setCurrentPage('recommend')}
-                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-full px-6 shadow-lg shadow-violet-500/25"
+                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-full px-6 shadow-lg shadow-violet-500/25 ml-2"
               >
-                Get Started
+                {t('nav.getStarted')}
               </Button>
             </div>
 
@@ -143,6 +169,23 @@ export function GlassNavbar() {
                     {item.label}
                   </button>
                 ))}
+                {mounted && (
+                  <button
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    className="flex text-left gap-2 px-4 py-3 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
+                  >
+                    {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                    {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                )}
+
+                <button
+                  onClick={() => setLanguage(language === 'en' ? 'th' : 'en')}
+                  className="flex text-left gap-2 px-4 py-3 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
+                >
+                  Language: {language === 'en' ? 'TH' : 'EN'}
+                </button>
+
                 <Button
                   onClick={() => {
                     setCurrentPage('recommend');
@@ -150,7 +193,7 @@ export function GlassNavbar() {
                   }}
                   className="mt-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl"
                 >
-                  Get Started
+                  {t('nav.getStarted')}
                 </Button>
               </div>
             </div>

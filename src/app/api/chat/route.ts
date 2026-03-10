@@ -12,22 +12,30 @@ export async function POST(req: Request) {
     const { question, products, selectedProduct } = body;
 
     let context = "";
-    if (products && Array.isArray(products)) {
+    if (selectedProduct) {
+      context = `
+Product name: ${selectedProduct.name}
+Price: $${selectedProduct.price}
+Specifications: ${JSON.stringify(selectedProduct.specs)}
+Pros: ${selectedProduct.pros?.join(', ')}
+Cons: ${selectedProduct.cons?.join(', ')}
+      `;
+    } else if (products && Array.isArray(products)) {
       context = products.map((p: any) => `${p.name} - $${p.price}`).join("\n")
-    } else if (selectedProduct) {
-      context = `${selectedProduct.name} - $${selectedProduct.price}`
     } else {
       context = "No products available for context."
     }
 
     const prompt = `
-User question:
-${question}
+You are a tech product advisor.
 
-Products:
+The user is currently asking about this product:
 ${context}
 
-Help the user compare these products and explain the differences.
+Answer the user's questions specifically about this product.
+
+User question:
+${question}
 `
 
     const completion = await groq.chat.completions.create({

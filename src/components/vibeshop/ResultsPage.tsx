@@ -17,14 +17,8 @@ import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
-
-// Suggested questions for quick access
-const SUGGESTED_QUESTIONS = [
-  "Which one is best for gaming?",
-  "Which has the best battery life?",
-  "Compare option 1 and 2",
-  "Best value for money?",
-];
+import { useLanguage } from '@/context/LanguageContext';
+import { formatPrice } from '@/utils/formatPrice';
 
 export function ResultsPage() {
   const {
@@ -40,7 +34,16 @@ export function ResultsPage() {
     setSelectedProductForChat,
   } = useAppStore();
 
+  const { t, language } = useLanguage();
   const [showChatButton, setShowChatButton] = useState(false);
+
+  // Suggested questions for quick access
+  const SUGGESTED_QUESTIONS = [
+    t('chat.suggest1'),
+    t('chat.suggest2'),
+    t('chat.suggest3'),
+    t('chat.suggest4'),
+  ];
 
   const handleSelect = async (productId: string) => {
     setSelectedRecommendation(productId);
@@ -51,12 +54,12 @@ export function ResultsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recommendationId: productId, feedbackType: 'selected' }),
       });
-      toast.success('Product selected!', {
-        description: 'Your feedback helps improve our recommendations',
+      toast.success(t('toast.prodSel'), {
+        description: t('toast.prodSelDesc'),
         icon: <Heart className="w-4 h-4 text-pink-500" />,
       });
     } catch {
-      toast.success('Product selected!');
+      toast.success(t('toast.prodSel'));
     }
   };
 
@@ -92,13 +95,13 @@ export function ResultsPage() {
             <AlertCircle className="w-10 h-10 text-amber-500" />
           </div>
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-            No Products Found
+            {t('results.noProducts')}
           </h2>
           <p className="text-zinc-600 dark:text-zinc-400 mb-6">
-            We couldn&apos;t find products matching your criteria. Try adjusting your budget or preferences.
+            {t('results.noProductsDesc')}
           </p>
           <Button onClick={() => setCurrentPage('recommend')} className="rounded-xl">
-            Try Again
+            {t('results.tryAgain')}
           </Button>
         </motion.div>
       </div>
@@ -123,19 +126,18 @@ export function ResultsPage() {
           >
             <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-              AI Recommendations Ready
+              {t('results.ready')}
             </span>
           </motion.div>
 
           <h1 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-            Your Top Picks
+            {t('results.title')}
           </h1>
 
           {request && (
             <div className="flex flex-col items-center gap-3 mb-6">
               <p className="text-zinc-600 dark:text-zinc-400 max-w-lg mx-auto">
-                Based on your budget of <span className="font-semibold text-violet-600 dark:text-violet-400">${request.budget.toLocaleString()}</span> for{' '}
-                <span className="font-semibold text-violet-600 dark:text-violet-400">{request.usage}</span> use
+                {t('results.basedOn').replace('{budget}', formatPrice(request.budget, language)).replace('{usage}', request.usage)}
               </p>
 
             </div>
@@ -197,11 +199,11 @@ export function ResultsPage() {
           <div className="flex items-center justify-center gap-2 mb-2">
             <AlertCircle className="w-4 h-4 text-amber-500" />
             <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">
-              Important
+              {t('results.important')}
             </span>
           </div>
           <p className="text-sm text-amber-600/80 dark:text-amber-400/80">
-            {disclaimer || 'AI recommendations are based on general product information. Please verify specifications and prices before purchase.'}
+            {t('home.disclaimer')}
           </p>
         </motion.div>
 
@@ -218,14 +220,14 @@ export function ResultsPage() {
             className="rounded-xl gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Modify Search
+            {t('results.modify')}
           </Button>
           <Button
             onClick={handleNewSearch}
             className="rounded-xl gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
           >
             <RotateCcw className="w-4 h-4" />
-            New Search
+            {t('results.newSearch')}
           </Button>
         </motion.div>
       </div>

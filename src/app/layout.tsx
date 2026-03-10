@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Kanit } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/context/LanguageContext";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const kanit = Kanit({
+  variable: "--font-kanit",
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin", "thai"],
 });
 
 export const metadata: Metadata = {
@@ -37,9 +40,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${kanit.variable} font-sans antialiased bg-background text-foreground`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

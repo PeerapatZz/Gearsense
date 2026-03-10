@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { ProductRecommendation } from '@/lib/store';
+import { useLanguage } from '@/context/LanguageContext';
+import { formatPrice } from '@/utils/formatPrice';
 
 interface ProductCardProps {
   product: ProductRecommendation;
@@ -23,19 +25,19 @@ interface ProductCardProps {
   openChat: (product: ProductRecommendation) => void;
 }
 
-const badgeConfig = {
+const badgeConfig: Record<string, { labelKey: string; icon: React.ElementType; className: string }> = {
   best_performance: {
-    label: 'Best Performance',
+    labelKey: 'badge.bestPerf',
     icon: Zap,
     className: 'bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0',
   },
   best_budget: {
-    label: 'Best Budget',
+    labelKey: 'badge.bestBudget',
     icon: DollarSign,
     className: 'bg-gradient-to-r from-emerald-400 to-teal-500 text-white border-0',
   },
   balanced_choice: {
-    label: 'Balanced Choice',
+    labelKey: 'badge.balanced',
     icon: Scale,
     className: 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white border-0',
   },
@@ -49,6 +51,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const badge = badgeConfig[product.badge] || badgeConfig.balanced_choice;
   const BadgeIcon = badge.icon;
+  const { t, language } = useLanguage();
 
   return (
     <motion.div
@@ -103,7 +106,7 @@ export function ProductCard({
             )}
           >
             <BadgeIcon className="w-3 h-3" />
-            {badge.label}
+            {t(badge.labelKey)}
           </Badge>
         </motion.div>
       </div>
@@ -127,12 +130,12 @@ export function ProductCard({
         <div className="flex items-center justify-between mb-3 pb-3 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex items-baseline gap-0.5">
             <span className="text-lg font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-              ${product.price.toLocaleString()}
+              {formatPrice(product.price, language)}
             </span>
           </div>
           <div className="flex items-center gap-1.5 text-xs">
             <span className="font-medium text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/30 px-2 py-1 rounded-md">
-              {product.score}% match
+              {t('product.match').replace('{score}', product.score.toString())}
             </span>
           </div>
         </div>
@@ -154,7 +157,7 @@ export function ProductCard({
         {/* AI Reason */}
         <div className="mb-3 p-3 rounded-xl bg-gradient-to-br from-violet-50/80 to-purple-50/80 dark:from-violet-950/40 dark:to-purple-950/40 border border-violet-100/50 dark:border-violet-800/30 flex-grow">
           <p className="text-[13px] text-zinc-700 dark:text-zinc-300 leading-relaxed line-clamp-4">
-            <span className="font-semibold text-violet-600 dark:text-violet-400">Why it fits: </span>
+            <span className="font-semibold text-violet-600 dark:text-violet-400">{t('product.why')}: </span>
             {product.reason}
           </p>
         </div>
@@ -162,7 +165,7 @@ export function ProductCard({
         {/* Pros */}
         <div className="mb-2">
           <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1.5">
-            Pros
+            {t('product.pros')}
           </p>
           <div className="space-y-0.5">
             {product.pros.slice(0, 3).map((pro, i) => (
@@ -180,7 +183,7 @@ export function ProductCard({
         {/* Cons */}
         <div className="mb-4">
           <p className="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 mb-1.5">
-            Cons
+            {t('product.cons')}
           </p>
           <div className="space-y-0.5">
             {product.cons.slice(0, 2).map((con, i) => (
@@ -203,7 +206,7 @@ export function ProductCard({
             className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl text-xs shadow-md shadow-violet-500/15"
           >
             <ShoppingBag className="w-3.5 h-3.5 mr-1.5" />
-            Choose this
+            {t('product.choose')}
           </Button>
           <Button
             onClick={() => openChat(product)}
@@ -212,7 +215,7 @@ export function ProductCard({
             className="rounded-xl text-xs border-violet-200 dark:border-violet-800 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-950/40"
           >
             <MessageCircle className="w-3.5 h-3.5 mr-1.5" />
-            Ask AI
+            {t('product.askAi')}
           </Button>
         </div>
       </div>

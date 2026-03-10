@@ -25,46 +25,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
 import { toast } from 'sonner';
-
-// Step configuration
-const STEPS = [
-  { id: 1, title: 'Product Type', shortTitle: 'Type', icon: Smartphone },
-  { id: 2, title: 'Budget', shortTitle: 'Budget', icon: DollarSign },
-  { id: 3, title: 'Usage', shortTitle: 'Usage', icon: Zap },
-  { id: 4, title: 'Preferences', shortTitle: 'Prefs', icon: Sparkles },
-];
-
-// Product type cards
-const PRODUCT_TYPES = [
-  {
-    value: 'smartphone',
-    label: 'Smartphone',
-    icon: Smartphone,
-    description: 'Find the best mobile device',
-    gradient: 'from-blue-500 to-cyan-500'
-  },
-  {
-    value: 'laptop',
-    label: 'Laptop',
-    icon: Laptop,
-    description: 'Choose the right computer',
-    gradient: 'from-violet-500 to-purple-500'
-  },
-  {
-    value: 'gaming',
-    label: 'Gaming Gear',
-    icon: Gamepad2,
-    description: 'Get the best gaming accessories',
-    gradient: 'from-rose-500 to-orange-500'
-  },
-];
-
-// Usage options
-const USAGE_OPTIONS = [
-  { value: 'gaming', label: 'Gaming', emoji: '🎮' },
-  { value: 'work', label: 'Work / Study', emoji: '💼' },
-  { value: 'general', label: 'General Use', emoji: '🌟' },
-];
+import { useLanguage } from '@/context/LanguageContext';
 
 // Animated floating icons for header
 const FLOATING_ICONS = [
@@ -76,6 +37,49 @@ const FLOATING_ICONS = [
 
 export function RecommendPage() {
   const { setRequest, setCurrentPage, currentStep, setCurrentStep, nextStep, prevStep } = useAppStore();
+  const { t, language } = useLanguage();
+
+  const currencySymbol = language === 'th' ? '฿' : '$';
+
+  // Step configuration
+  const STEPS = [
+    { id: 1, title: t('step.type'), shortTitle: 'Type', icon: Smartphone },
+    { id: 2, title: t('step.budget'), shortTitle: 'Budget', icon: DollarSign },
+    { id: 3, title: t('step.usage'), shortTitle: 'Usage', icon: Zap },
+    { id: 4, title: t('step.prefs'), shortTitle: 'Prefs', icon: Sparkles },
+  ];
+
+  // Product type cards
+  const PRODUCT_TYPES = [
+    {
+      value: 'smartphone',
+      label: t('type.phone'),
+      icon: Smartphone,
+      description: t('type.phoneDesc'),
+      gradient: 'from-blue-500 to-cyan-500'
+    },
+    {
+      value: 'laptop',
+      label: t('type.laptop'),
+      icon: Laptop,
+      description: t('type.laptopDesc'),
+      gradient: 'from-violet-500 to-purple-500'
+    },
+    {
+      value: 'gaming',
+      label: t('type.gaming'),
+      icon: Gamepad2,
+      description: t('type.gamingDesc'),
+      gradient: 'from-rose-500 to-orange-500'
+    },
+  ];
+
+  // Usage options
+  const USAGE_OPTIONS = [
+    { value: 'gaming', label: t('usage.gaming'), emoji: '🎮' },
+    { value: 'work', label: t('usage.work'), emoji: '💼' },
+    { value: 'general', label: t('usage.general'), emoji: '🌟' },
+  ];
 
   const [productType, setProductType] = useState('');
   const [budget, setBudget] = useState(1000);
@@ -131,7 +135,7 @@ export function RecommendPage() {
 
   const handleSubmit = () => {
     if (!productType || !budget || !usage) {
-      toast.error('Please complete all required fields');
+      toast.error(t('toast.reqAll'));
       return;
     }
 
@@ -142,8 +146,8 @@ export function RecommendPage() {
       preferences,
     });
 
-    toast.success('Starting AI analysis...', {
-      description: 'Finding the best products for you'
+    toast.success(t('toast.aiStart'), {
+      description: t('toast.aiStartDesc')
     });
     setCurrentPage('loading');
   };
@@ -151,9 +155,9 @@ export function RecommendPage() {
   const handleNext = () => {
     if (!isStepValid(currentStep)) {
       const messages: Record<number, string> = {
-        1: 'Please select a product type',
-        2: 'Please enter a budget of at least $100',
-        3: 'Please select your primary usage',
+        1: t('toast.reqType'),
+        2: t('toast.reqBudget'),
+        3: t('toast.reqUsage'),
         4: '',
       };
       if (messages[currentStep]) {
@@ -253,18 +257,18 @@ export function RecommendPage() {
           >
             <Cpu className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
             <span className="text-xs font-medium text-violet-700 dark:text-violet-300">
-              Powered by GearSense AI
+              {t('rec.powered')}
             </span>
           </motion.div>
 
           {/* Title */}
           <h1 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
-            Find the Perfect Tech Gear
+            {t('rec.title')}
           </h1>
 
           {/* Subtitle */}
           <p className="text-zinc-600 dark:text-zinc-400 max-w-lg mx-auto">
-            Tell us your needs and GearSense AI will recommend the best tech products for you.
+            {t('rec.subtitle')}
           </p>
         </motion.div>
 
@@ -365,10 +369,10 @@ export function RecommendPage() {
                 >
                   <div className="text-center mb-6">
                     <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-                      What are you looking for?
+                      {t('rec.step1.title')}
                     </h2>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Select a product category to get started
+                      {t('rec.step1.desc')}
                     </p>
                   </div>
 
@@ -459,17 +463,17 @@ export function RecommendPage() {
                 >
                   <div className="text-center mb-6">
                     <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-                      What&apos;s your budget?
+                      {t('rec.step2.title')}
                     </h2>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Higher budgets allow more premium recommendations
+                      {t('rec.step2.desc')}
                     </p>
                   </div>
 
                   {/* Budget display */}
                   <div className="text-center py-6">
                     <div className="inline-flex items-baseline gap-1">
-                      <span className="text-2xl text-zinc-400">$</span>
+                      <span className="text-2xl text-zinc-400">{currencySymbol}</span>
                       <motion.span
                         key={budget}
                         initial={{ scale: 1.1, opacity: 0.5 }}
@@ -495,16 +499,16 @@ export function RecommendPage() {
                       className="py-4"
                     />
                     <div className="flex justify-between text-xs text-zinc-400 mt-2">
-                      <span>$100</span>
-                      <span>$5,000+</span>
+                      <span>{currencySymbol}100</span>
+                      <span>{currencySymbol}5,000+</span>
                     </div>
                   </div>
 
                   {/* Manual input */}
                   <div className="flex items-center justify-center gap-4">
-                    <span className="text-sm text-zinc-500">Or enter manually:</span>
+                    <span className="text-sm text-zinc-500">{t('rec.step2.manual')}</span>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">{currencySymbol}</span>
                       <Input
                         type="text"
                         value={budgetInput}
@@ -540,7 +544,7 @@ export function RecommendPage() {
                             : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-violet-100 dark:hover:bg-violet-900/30'
                         )}
                       >
-                        ${amount.toLocaleString()}
+                        {currencySymbol}{amount.toLocaleString()}
                       </button>
                     ))}
                   </div>
@@ -561,10 +565,10 @@ export function RecommendPage() {
                 >
                   <div className="text-center mb-6">
                     <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-                      How will you use it?
+                      {t('rec.step3.title')}
                     </h2>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      This helps us recommend products that match your lifestyle
+                      {t('rec.step3.desc')}
                     </p>
                   </div>
 
@@ -627,10 +631,10 @@ export function RecommendPage() {
                 >
                   <div className="text-center mb-6">
                     <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-                      Any preferences?
+                      {t('rec.step4.title')}
                     </h2>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Optional settings to fine-tune your recommendations
+                      {t('rec.step4.desc')}
                     </p>
                   </div>
 
@@ -639,9 +643,9 @@ export function RecommendPage() {
                   {/* Preference toggles */}
                   <div className="max-w-sm mx-auto space-y-3">
                     {[
-                      { key: 'highPerformance', label: 'Prioritize performance', icon: Zap, desc: 'Focus on speed and power' },
-                      { key: 'batteryImportant', label: 'Long battery life', icon: Battery, desc: 'Extended usage time' },
-                      { key: 'lightweight', label: 'Lightweight device', icon: Feather, desc: 'Easy to carry' },
+                      { key: 'highPerformance', label: t('pref.perf'), icon: Zap, desc: t('pref.perfDesc') },
+                      { key: 'batteryImportant', label: t('pref.battery'), icon: Battery, desc: t('pref.batteryDesc') },
+                      { key: 'lightweight', label: t('pref.light'), icon: Feather, desc: t('pref.lightDesc') },
                     ].map((pref) => {
                       const Icon = pref.icon;
                       return (
@@ -693,11 +697,11 @@ export function RecommendPage() {
                 )}
               >
                 <ChevronLeft className="w-4 h-4" />
-                Back
+                {t('rec.back')}
               </Button>
 
               <div className="flex items-center gap-2 text-sm text-zinc-500">
-                <span>Step {currentStep} of {STEPS.length}</span>
+                <span>{t('rec.stepCount').replace('{current}', String(currentStep)).replace('{total}', String(STEPS.length))}</span>
               </div>
 
               <Button
@@ -716,11 +720,11 @@ export function RecommendPage() {
                 {currentStep === 4 ? (
                   <>
                     <Sparkles className="w-4 h-4" />
-                    Get Recommendations
+                    {t('rec.getRecs')}
                   </>
                 ) : (
                   <>
-                    Continue
+                    {t('rec.continue')}
                     <ChevronRight className="w-4 h-4" />
                   </>
                 )}

@@ -6,20 +6,27 @@ import { Sparkles, Cpu, Search, Target, CheckCircle2, Zap } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
-const loadingSteps = [
-  { message: 'Analyzing your preferences...', icon: Target, description: 'Understanding your requirements' },
-  { message: 'Scanning product database...', icon: Search, description: 'Searching thousands of products' },
-  { message: 'Comparing specifications...', icon: Cpu, description: 'Analyzing features and specs' },
-  { message: 'Finding the best matches...', icon: Zap, description: 'Scoring and ranking products' },
-  { message: 'Generating recommendations...', icon: Sparkles, description: 'AI creating explanations' },
-  { message: 'Finalizing suggestions...', icon: CheckCircle2, description: 'Almost ready!' },
-];
+// Steps moved inside component for translation
+
 
 interface LoadingExperienceProps {
   onComplete?: () => void;
 }
 
+import { useLanguage } from '@/context/LanguageContext';
+
 export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
+  const { t } = useLanguage();
+
+  const loadingSteps = [
+    { message: t('load.step1.msg'), icon: Target, description: t('load.step1.desc') },
+    { message: t('load.step2.msg'), icon: Search, description: t('load.step2.desc') },
+    { message: t('load.step3.msg'), icon: Cpu, description: t('load.step3.desc') },
+    { message: t('load.step4.msg'), icon: Zap, description: t('load.step4.desc') },
+    { message: t('load.step5.msg'), icon: Sparkles, description: t('load.step5.desc') },
+    { message: t('load.step6.msg'), icon: CheckCircle2, description: t('load.step6.desc') },
+  ];
+
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -81,7 +88,7 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-full blur-3xl"
         />
-        
+
         <motion.div
           animate={{
             scale: [1.2, 1, 1.2],
@@ -102,16 +109,16 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
                 scale: [1, 1.4 + i * 0.2, 1],
                 opacity: [0.3 - i * 0.1, 0, 0.3 - i * 0.1],
               }}
-              transition={{ 
-                duration: 2 + i * 0.5, 
-                repeat: Infinity, 
+              transition={{
+                duration: 2 + i * 0.5,
+                repeat: Infinity,
                 delay: i * 0.3,
-                ease: 'easeInOut' 
+                ease: 'easeInOut'
               }}
               className="absolute inset-0 rounded-full border-2 border-violet-500/30"
             />
           ))}
-          
+
           {/* Rotating gradient ring */}
           <motion.div
             animate={{ rotate: 360 }}
@@ -121,7 +128,7 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
               background: 'conic-gradient(from 0deg, transparent, rgb(139 92 246 / 0.5), transparent, rgb(168 85 247 / 0.5), transparent)',
             }}
           />
-          
+
           {/* Inner rotating ring */}
           <motion.div
             animate={{ rotate: -360 }}
@@ -131,7 +138,7 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
               background: 'conic-gradient(from 180deg, transparent, rgb(99 102 241 / 0.4), transparent, rgb(168 85 247 / 0.4), transparent)',
             }}
           />
-          
+
           {/* Center content */}
           <div className="absolute inset-5 rounded-full bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500 flex items-center justify-center shadow-2xl shadow-violet-500/40">
             <AnimatePresence mode="wait">
@@ -162,7 +169,7 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
             <Sparkles className="w-4 h-4 text-violet-600 dark:text-violet-400" />
           </motion.div>
           <span className="text-sm font-medium text-violet-700 dark:text-violet-300">
-            GearSense AI Processing
+            {t('load.aiProcessing')}
           </span>
         </motion.div>
 
@@ -188,8 +195,8 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
         {/* Progress bar */}
         <div className="mt-8 space-y-3 relative">
           <div className="relative overflow-hidden rounded-full">
-            <Progress 
-              value={progress} 
+            <Progress
+              value={progress}
               className="h-2.5 bg-zinc-100 dark:bg-zinc-800"
             />
             {/* Shimmer effect */}
@@ -199,10 +206,10 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Processing...
+              {t('load.processing')}
             </p>
             <p className="text-xs font-semibold text-violet-600 dark:text-violet-400">
               {Math.round(progress)}%
@@ -217,9 +224,9 @@ export function LoadingExperience({ onComplete }: LoadingExperienceProps) {
               key={index}
               animate={{
                 scale: currentStep === index ? 1.4 : 1,
-                backgroundColor: index < currentStep 
+                backgroundColor: index < currentStep
                   ? 'rgb(34 197 94)' // green-500
-                  : index === currentStep 
+                  : index === currentStep
                     ? 'rgb(139 92 246)' // violet-500
                     : 'rgb(228 228 231)', // zinc-200
               }}
